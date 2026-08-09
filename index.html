@@ -1,0 +1,2802 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Vũ Dũng & Thúy Vân — Thiệp Mời Cưới (CineLove Mobile Native)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=EB+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ============ DESIGN SYSTEM (CINELOVE NATIVE MOBILE OPTIMIZED) ============ */
+    :root {
+      --bg: #f7eaee;
+      --bg-soft: #f1d8de;
+      --card: #fff9f7;
+      --maroon: #70262b;
+      --maroon-dark: #541b1f;
+      --maroon-soft: #aa575d;
+      --rose: #e2a5ab;
+      --text: #523639;
+      --text-soft: #967578;
+      --line: rgba(112, 38, 43, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background: #141213;
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    /* PAGE CONTAINER - FLUID ON MOBILE, CENTERED CONTAINER ON DESKTOP */
+    .page {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      min-height: 100dvh;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.7);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (max-width: 520px) {
+      body {
+        background: var(--bg);
+      }
+
+      .page {
+        max-width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+
+    body.locked {
+      overflow: hidden;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    ::selection {
+      background: var(--rose);
+      color: #fff;
+    }
+
+    .script {
+      font-family: 'Alex Brush', cursive;
+    }
+
+    .eyebrow {
+      font-family: 'EB Garamond', serif;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      color: var(--maroon-soft);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .8s cubic-bezier(0.16, 1, 0.3, 1), transform .8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* SCROLL PROGRESS BAR */
+    .scroll-progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #aa575d, #e2a5ab, #70262b);
+      width: 0%;
+      z-index: 999;
+      transition: width 0.1s ease-out;
+      box-shadow: 0 0 8px rgba(226, 165, 171, 0.8);
+    }
+
+    /* ---------------- MUSIC DISC BUTTON (TOP RIGHT - DRAGGABLE & TOUCH READY) ---------------- */
+    .music-disc-btn {
+      position: fixed;
+      top: max(18px, env(safe-area-inset-top, 18px));
+      right: 18px;
+      z-index: 350;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e29499 0%, #aa575d 100%);
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      box-shadow: 0 4px 18px rgba(112, 38, 43, 0.4);
+      user-select: none;
+      touch-action: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .music-disc-btn:active {
+      cursor: grabbing;
+      transform: scale(0.94);
+    }
+
+    .music-disc-inner {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #70262b;
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.65rem;
+      pointer-events: none;
+    }
+
+    .music-disc-btn.playing {
+      animation: spinDisc 4s linear infinite;
+    }
+
+    @keyframes spinDisc {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ---------------- FLOATING MENU WIDGET (BOTTOM RIGHT - DRAGGABLE ICON) ---------------- */
+    .floating-menu-wrap {
+      position: fixed;
+      bottom: max(24px, env(safe-area-inset-bottom, 24px));
+      right: 20px;
+      z-index: 350;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      transition: transform 0.2s ease;
+    }
+
+    .floating-menu-wrap:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+
+    .floating-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #fff;
+      box-shadow: 0 4px 16px rgba(112, 38, 43, 0.4);
+      background: #fff;
+      margin-bottom: -12px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .floating-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .floating-hamburger {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f07481, #d44b58);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 4px 16px rgba(212, 75, 88, 0.45);
+      border: 2px solid #fff;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .floating-hamburger span {
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+
+    /* NAVIGATION DRAWER FOR MOBILE THUMBS */
+    .nav-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-drawer.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .nav-drawer-content {
+      width: 290px;
+      max-width: 85%;
+      height: 100%;
+      background: var(--card);
+      padding: calc(env(safe-area-inset-top, 20px) + 1.5rem) 1.6rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+      overflow-y: auto;
+    }
+
+    .nav-drawer.active .nav-drawer-content {
+      transform: translateX(0);
+    }
+
+    .nav-drawer-close {
+      align-self: flex-end;
+      font-size: 2rem;
+      color: var(--maroon);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-top: 1.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      color: var(--maroon-dark);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .nav-links a:active {
+      color: var(--rose);
+      transform: translateX(6px);
+    }
+
+    /* ---------------- ENVELOPE / COVER (MOBILE 3D FLAP) ---------------- */
+    .cover {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      background: radial-gradient(ellipse at 50% 10%, #fdf5f7, var(--bg) 75%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5vh 6vw;
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cover.opened {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .emblem {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--maroon-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.8rem;
+      color: var(--maroon);
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .cover-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-size: 1.15rem;
+      color: var(--maroon-dark);
+      margin-bottom: 1rem;
+    }
+
+    .cover-names {
+      font-family: 'Alex Brush', cursive;
+      font-size: clamp(2.3rem, 9vw, 3.2rem);
+      color: var(--maroon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      line-height: 1;
+      margin-bottom: 1.2rem;
+    }
+
+    .cover-names .amp {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.7em;
+      color: var(--maroon-soft);
+    }
+
+    .envelope-wrap {
+      margin-top: 1.2rem;
+      width: 90%;
+      max-width: 320px;
+      cursor: pointer;
+      user-select: none;
+      perspective: 1000px;
+    }
+
+    .envelope {
+      position: relative;
+      aspect-ratio: 4/3;
+      background: #70262b;
+      border-radius: 8px;
+      box-shadow: 0 15px 35px rgba(112, 38, 43, 0.4);
+      overflow: hidden;
+    }
+
+    .env-photo-inside {
+      position: absolute;
+      inset: 8px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: url('hero_couple.png') center/cover no-repeat, url('assets/hero_couple.png') center/cover no-repeat;
+      z-index: 1;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .envelope.tapped .env-photo-inside {
+      transform: translateY(-30px) scale(1.05);
+    }
+
+    .env-flap-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 55%;
+      background: var(--maroon-dark);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 3;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .envelope.tapped .env-flap-top {
+      transform: rotateX(180deg);
+      z-index: 0;
+    }
+
+    .env-pocket-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65%;
+      background: var(--maroon);
+      clip-path: polygon(0 100%, 100% 100%, 100% 20%, 50% 65%, 0 20%);
+      z-index: 2;
+    }
+
+    .env-seal {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #caa15a, #8a6a2e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff3d6;
+      font-size: 0.75rem;
+      font-family: 'EB Garamond', serif;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 4;
+      transition: all 0.5s ease;
+    }
+
+    .envelope.tapped .env-seal {
+      transform: translate(-50%, -50%) scale(1.2) rotate(25deg);
+      opacity: 0;
+    }
+
+    .tap-hint {
+      margin-top: 1.6rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--maroon-soft);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.55;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* ---------------- VERTICAL SIDE WATERMARK ---------------- */
+    .side-watermark {
+      position: absolute;
+      right: -18px;
+      top: 40%;
+      transform: rotate(90deg);
+      transform-origin: right center;
+      font-size: 0.75rem;
+      color: rgba(112, 38, 43, 0.35);
+      font-family: 'Jost', sans-serif;
+      letter-spacing: 0.1em;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ---------------- SECTION 1: HERO COUNTDOWN & INVITATION INTRO ---------------- */
+    .sec-hero-intro {
+      position: relative;
+      min-height: 85vh;
+      min-height: 85dvh;
+      padding: 2rem 1.2rem;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: center;
+    }
+
+    .hero-bg-photo {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: url('hero_countdown_couple.png') center top/cover no-repeat, url('assets/hero_countdown_couple.png') center top/cover no-repeat;
+    }
+
+    .hero-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(247, 234, 238, 0.1) 0%, rgba(247, 234, 238, 0.4) 50%, rgba(247, 234, 238, 0.95) 100%);
+    }
+
+    .countdown-boxes {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .c-box {
+      background: var(--maroon);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.55rem 0.45rem;
+      min-width: 52px;
+      box-shadow: 0 4px 12px rgba(112, 38, 43, 0.3);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .c-box .num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      line-height: 1;
+      font-weight: 600;
+    }
+
+    .c-box .label {
+      font-size: 0.65rem;
+      opacity: 0.9;
+      margin-top: 0.2rem;
+      font-family: 'Jost', sans-serif;
+    }
+
+    .inv-intro-glass-card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.6rem 1.2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(112, 38, 43, 0.15);
+    }
+
+    .inv-intro-glass-card .title {
+      font-family: 'EB Garamond', serif;
+      letter-spacing: 0.35em;
+      font-size: 1.1rem;
+      color: var(--maroon);
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .inv-intro-glass-card .body {
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--text);
+      font-weight: 300;
+    }
+
+    /* ---------------- SECTION 2: LỄ THÀNH HÔN & TIỆC MỪNG ---------------- */
+    .sec-ceremony {
+      padding: 2.8rem 1.2rem;
+      position: relative;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+    }
+
+    .ceremony-top-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    .ceremony-tag {
+      writing-mode: vertical-rl;
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.5rem;
+      color: var(--maroon);
+      border-left: 1.5px solid var(--maroon);
+      padding-left: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .ceremony-names-col {
+      flex: 1;
+      text-align: center;
+    }
+
+    .ceremony-names-col .name {
+      font-family: 'Alex Brush', cursive;
+      font-size: clamp(1.9rem, 7vw, 2.3rem);
+      color: var(--maroon);
+      line-height: 1.25;
+    }
+
+    .ceremony-names-col .amp {
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.5rem;
+      color: var(--maroon-soft);
+      margin: 0.15rem 0;
+      display: block;
+    }
+
+    .parents-grid {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.8rem;
+      text-align: center;
+    }
+
+    .parents-grid .col {
+      flex: 1;
+    }
+
+    .parents-grid h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--maroon-dark);
+      margin-bottom: 0.4rem;
+    }
+
+    .parents-grid p {
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .reception-block {
+      text-align: center;
+      margin-top: 2.2rem;
+      padding-top: 1.8rem;
+      border-top: 1px dashed var(--line);
+    }
+
+    .reception-block .rec-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--maroon-dark);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .reception-block .rec-sub {
+      font-size: 0.88rem;
+      color: var(--maroon);
+      margin-top: 0.4rem;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+
+    .date-divider-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    .date-line {
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, transparent, var(--maroon), transparent);
+      opacity: 0.4;
+    }
+
+    .date-part {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--maroon-dark);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .date-part .date-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--maroon);
+    }
+
+    .date-big-day {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.2rem;
+      color: var(--maroon);
+      line-height: 0.85;
+      font-weight: 700;
+      padding: 0 0.5rem;
+      white-space: nowrap;
+      border-left: 1px solid rgba(112, 38, 43, 0.22);
+      border-right: 1px solid rgba(112, 38, 43, 0.22);
+    }
+
+    .lunar-text {
+      font-size: 0.82rem;
+      color: var(--text-soft);
+      font-style: italic;
+      margin-top: 0.4rem;
+    }
+
+    /* ---------------- WEDDING TIMELINE BLOCK (PROGRAMME) ---------------- */
+    .wedding-timeline-block {
+      margin-top: 2.2rem;
+      padding-top: 1.8rem;
+      border-top: 1px dashed var(--line);
+      text-align: center;
+    }
+
+    .timeline-title {
+      font-family: 'EB Garamond', serif;
+      letter-spacing: 0.35em;
+      font-size: 0.95rem;
+      color: var(--maroon-soft);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--maroon);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+    }
+
+    .timeline-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      text-align: left;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: stretch;
+    }
+
+    .timeline-badge-day {
+      width: 72px;
+      min-width: 72px;
+      border-radius: 12px;
+      background: rgba(112, 38, 43, 0.07);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 0.3rem;
+      text-align: center;
+    }
+
+    .timeline-badge-day.main {
+      background: var(--maroon);
+      color: #fff;
+      border-color: var(--maroon);
+      box-shadow: 0 4px 14px rgba(112, 38, 43, 0.25);
+    }
+
+    .timeline-badge-day .day-name {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.95;
+    }
+
+    .timeline-badge-day.main .day-name {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .timeline-badge-day .day-date {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-top: 0.2rem;
+    }
+
+    .timeline-badge-day.main .day-date {
+      color: #fff;
+    }
+
+    .timeline-card {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 4px 14px rgba(112, 38, 43, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .timeline-card.main {
+      border-left: 3px solid var(--maroon);
+    }
+
+    .tl-header {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .tl-icon {
+      font-size: 1.15rem;
+    }
+
+    .tl-event-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--maroon);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tl-time {
+      font-size: 0.8rem;
+      color: var(--maroon-dark);
+      font-weight: 500;
+    }
+
+    .tl-desc {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      font-style: italic;
+      margin-top: 0.3rem;
+      line-height: 1.4;
+    }
+
+    .tl-event-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .tl-divider {
+      height: 1px;
+      background: var(--line);
+      opacity: 0.6;
+      margin: 0.15rem 0;
+    }
+
+    /* ---------------- SECTION 3: ĐỊA ĐIỂM TỔ CHÚC & MAP (2 ĐỊA ĐIỂM NHÀ TRAI & NHÀ GÁI) ---------------- */
+    .sec-location {
+      padding: 2.5rem 1.2rem;
+      position: relative;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .loc-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--maroon-dark);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .location-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .loc-tab-btn {
+      flex: 1;
+      max-width: 170px;
+      padding: 0.55rem 0.8rem;
+      border-radius: 25px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--maroon-dark);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      outline: none;
+    }
+
+    .loc-tab-btn.active {
+      background: var(--maroon);
+      color: #fff;
+      border-color: var(--maroon);
+      box-shadow: 0 4px 14px rgba(112, 38, 43, 0.3);
+    }
+
+    .location-cards-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .loc-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.2rem 1rem;
+      box-shadow: 0 8px 24px rgba(112, 38, 43, 0.1);
+      text-align: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .loc-card.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .loc-card-tag {
+      display: inline-block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--maroon);
+      padding: 0.25rem 0.8rem;
+      border-radius: 12px;
+      background: rgba(112, 38, 43, 0.08);
+      margin-bottom: 0.6rem;
+    }
+
+    .venue-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--maroon);
+      margin: 0.3rem 0 0.2rem;
+    }
+
+    .venue-addr {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      font-style: italic;
+      margin-bottom: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .venue-time {
+      font-size: 0.82rem;
+      color: var(--maroon-dark);
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+    }
+
+    .map-card-container {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(112, 38, 43, 0.08);
+      position: relative;
+      margin-top: 0.6rem;
+    }
+
+    .map-iframe {
+      width: 100%;
+      height: 210px;
+      border: none;
+      display: block;
+    }
+
+    .btn-map-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: var(--maroon);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s;
+      z-index: 2;
+    }
+
+    .btn-map-overlay:active {
+      background: var(--maroon);
+      color: #fff;
+    }
+
+    /* ---------------- SECTION 4: MARRY ME? ---------------- */
+    .sec-marry {
+      padding: 2rem 1.2rem 3.5rem;
+      position: relative;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      min-height: 520px;
+    }
+
+    .marry-header {
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .marry-header .sweet-wedding {
+      font-family: 'EB Garamond', serif;
+      letter-spacing: 0.4em;
+      font-size: 1rem;
+      color: var(--maroon);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .marry-composition {
+      position: relative;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .marry-photo-main {
+      width: 74%;
+      margin-left: auto;
+      border: 1.5px solid var(--maroon);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(112, 38, 43, 0.2);
+      background: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .marry-photo-main img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .marry-title-overlay {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      z-index: 10;
+      font-family: 'EB Garamond', serif;
+      font-size: clamp(2.2rem, 8vw, 2.8rem);
+      font-weight: 700;
+      color: var(--maroon);
+      line-height: 1.1;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .marry-photo-sub {
+      width: 62%;
+      margin-top: -38%;
+      position: relative;
+      z-index: 5;
+      border: 1.5px solid var(--maroon);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(112, 38, 43, 0.25);
+      background: #fff;
+    }
+
+    .marry-photo-sub img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .yes-ido-overlay {
+      position: absolute;
+      right: 0;
+      bottom: 8px;
+      z-index: 10;
+      text-align: right;
+      font-family: 'EB Garamond', serif;
+      color: var(--maroon);
+    }
+
+    .yes-ido-overlay .yes-text {
+      font-size: clamp(2rem, 7vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.06em;
+    }
+
+    .yes-ido-overlay .ido-text {
+      font-size: clamp(1.8rem, 6.5vw, 2.3rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.06em;
+    }
+
+    /* ---------------- SECTION 5 & 6: ABOUT US ---------------- */
+    .sec-about-bride,
+    .sec-about-groom {
+      padding: 2.8rem 1.2rem;
+      position: relative;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+    }
+
+    .about-sec-title {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Alex Brush', cursive;
+      font-size: 2.3rem;
+      color: var(--maroon-dark);
+      margin-bottom: 1.6rem;
+    }
+
+    .about-sec-title .sparkle {
+      font-size: 1.3rem;
+    }
+
+    .bride-top-row {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 0.8rem;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .info-card-box {
+      border: 1.5px solid var(--maroon);
+      border-radius: 8px;
+      padding: 1.2rem 0.8rem;
+      background: rgba(255, 255, 255, 0.65);
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(112, 38, 43, 0.1);
+    }
+
+    .info-card-box .person-name {
+      font-family: 'Alex Brush', cursive;
+      font-size: clamp(1.5rem, 5.5vw, 1.8rem);
+      color: var(--maroon);
+      line-height: 1.25;
+    }
+
+    .info-card-box .person-date {
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.3rem;
+      color: var(--maroon-dark);
+      margin: 0.2rem 0;
+    }
+
+    .info-card-box .person-location {
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.3rem;
+      color: var(--text-soft);
+    }
+
+    .bride-portrait-frame {
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 20px rgba(112, 38, 43, 0.2);
+    }
+
+    .bride-portrait-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .couple-banner-frame {
+      border: 1.5px solid var(--maroon);
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 16/10;
+      box-shadow: 0 8px 20px rgba(112, 38, 43, 0.2);
+      margin-top: 0.8rem;
+      position: relative;
+    }
+
+    .couple-banner-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .vertical-label {
+      position: absolute;
+      right: -25px;
+      bottom: 20px;
+      transform: rotate(90deg);
+      transform-origin: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      color: var(--rose);
+      font-style: italic;
+      letter-spacing: 0.1em;
+    }
+
+    .groom-top-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 0.8rem;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    /* ---------------- SECTION 7: SAVE THE DATE ---------------- */
+    .sec-std {
+      padding: 2.8rem 1.2rem;
+      position: relative;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+    }
+
+    .std-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.3rem;
+    }
+
+    .std-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-style: italic;
+      color: var(--maroon-dark);
+      font-weight: 500;
+    }
+
+    .std-badge {
+      background: var(--rose);
+      color: #fff;
+      font-family: 'EB Garamond', serif;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .std-photo-container {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      border: 1.5px solid var(--maroon);
+      box-shadow: 0 12px 30px rgba(112, 38, 43, 0.3);
+    }
+
+    .std-photo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .std-calendar-glass {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      background: rgba(255, 245, 247, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(112, 38, 43, 0.3);
+      border-radius: 10px;
+      padding: 0.8rem 0.6rem;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .std-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .std-cal-grid .d {
+      font-size: 0.75rem;
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      padding: 3px 0;
+      border-radius: 50%;
+    }
+
+    .std-cal-grid .d.hl {
+      background: var(--maroon);
+      color: #fff;
+      font-weight: 600;
+      position: relative;
+    }
+
+    .std-cal-grid .d.hl::after {
+      content: '❤️';
+      position: absolute;
+      font-size: 0.55rem;
+      top: -5px;
+      right: -2px;
+    }
+
+    .timeline-mini {
+      margin-top: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--maroon-dark);
+    }
+
+    .timeline-mini .car {
+      font-size: 1.1rem;
+    }
+
+    .timeline-mini .heart-icon {
+      color: #e04858;
+      font-size: 0.95rem;
+    }
+
+    /* ---------------- SECTION 8: INVITATION PHOTO STACK ---------------- */
+    .sec-invitation {
+      padding: 2.8rem 1.2rem;
+      position: relative;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .inv-top-title {
+      font-family: 'EB Garamond', serif;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      font-size: 1.05rem;
+      color: var(--maroon);
+      font-weight: 600;
+      margin-bottom: 1.8rem;
+    }
+
+    .inv-stack-container {
+      position: relative;
+      margin: 0 auto 2.2rem;
+      width: 92%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .inv-frame {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 20px rgba(112, 38, 43, 0.2);
+      aspect-ratio: 16/9;
+      background: #fff;
+    }
+
+    .inv-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .side-text-left {
+      position: absolute;
+      left: -35px;
+      top: 35%;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.5rem;
+      color: var(--maroon-soft);
+    }
+
+    .side-text-right {
+      position: absolute;
+      right: -35px;
+      top: 35%;
+      transform: rotate(90deg);
+      transform-origin: center;
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.5rem;
+      color: var(--maroon-soft);
+    }
+
+    .btn-gallery-trigger {
+      display: inline-block;
+      width: 100%;
+      max-width: 300px;
+      padding: 0.85rem;
+      background: #fff;
+      border: 1px solid var(--maroon);
+      border-radius: 8px;
+      color: var(--maroon);
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(112, 38, 43, 0.15);
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-gallery-trigger:active {
+      background: var(--maroon);
+      color: #fff;
+    }
+
+    /* ---------------- SECTION 9: ALBUM ẢNH CƯỚI TƯƠNG TÁC (PRO GESTURE SLIDER) ---------------- */
+    .sec-gallery {
+      padding: 2.8rem 1.2rem;
+      position: relative;
+      background: var(--card);
+      border-top: 1px solid var(--line);
+    }
+
+    .gallery-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+      box-shadow: 0 8px 24px rgba(112, 38, 43, 0.1);
+    }
+
+    .gallery-featured {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: #111;
+      border: 1px solid var(--line);
+      cursor: grab;
+      user-select: none;
+      touch-action: pan-y;
+    }
+
+    .gallery-featured:active {
+      cursor: grabbing;
+    }
+
+    .gallery-featured img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .gallery-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+    }
+
+    .gallery-zoom-hint {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--maroon);
+      font-size: 0.68rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--line);
+      color: var(--maroon);
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all 0.25s;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+      z-index: 5;
+    }
+
+    .gallery-nav.prev {
+      left: 8px;
+    }
+
+    .gallery-nav.next {
+      right: 8px;
+    }
+
+    .gallery-thumbs {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+      overflow-x: auto;
+      padding-bottom: 0.4rem;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gallery-thumbs::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .gallery-thumbs::-webkit-scrollbar-thumb {
+      background: var(--rose);
+      border-radius: 4px;
+    }
+
+    .thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: pointer;
+      border: 2px solid transparent;
+      opacity: 0.65;
+      transition: all 0.3s;
+    }
+
+    .thumb.active,
+    .thumb:hover {
+      opacity: 1;
+      border-color: var(--maroon);
+      transform: scale(1.05);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* LIGHTBOX MODAL */
+    .lightbox-content {
+      max-width: 94vw;
+      max-height: 88vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 88vh;
+      border-radius: 10px;
+      border: 2px solid var(--rose);
+      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ---------------- SECTION 10: GỬI QUÀ MỪNG ---------------- */
+    .sec-gift {
+      padding: 2.8rem 1.2rem 4.5rem;
+      position: relative;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+    }
+
+    .gift-title {
+      color: var(--maroon-soft);
+      letter-spacing: 0.25em;
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .gift-card-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .gift-card-row.rev {
+      flex-direction: row-reverse;
+    }
+
+    .gift-avatar-circle {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px dashed var(--rose);
+      padding: 2px;
+      background: #fff;
+    }
+
+    .gift-avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .gift-card-content {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.85rem 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      box-shadow: 0 6px 18px rgba(112, 38, 43, 0.08);
+      transition: transform 0.3s;
+    }
+
+    .gift-info .role {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    .gift-info .who {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      color: var(--maroon-dark);
+      font-weight: 600;
+      margin: 0.1rem 0;
+    }
+
+    .gift-info .acc {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      font-family: monospace;
+    }
+
+    .btn-copy {
+      display: inline-block;
+      font-size: 0.68rem;
+      color: var(--maroon);
+      background: var(--bg-soft);
+      border: 1px solid var(--maroon-soft);
+      padding: 0.25rem 0.55rem;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 0.35rem;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:active {
+      background: var(--maroon);
+      color: #fff;
+    }
+
+    .qr-box-wrap {
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .qr-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      display: block;
+      box-shadow: 0 3px 10px rgba(112, 38, 43, 0.12);
+      transition: transform 0.2s;
+    }
+    .qr-img:active {
+      transform: scale(1.05);
+    }
+
+    /* CUSTOM VIDEO ANIMATED STICKER (GROOM TWIRLING THE BRIDE) */
+    .dancing-cartoon-wrap {
+      width: 160px;
+      margin: 2rem auto 1rem;
+      display: block;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      z-index: 20;
+    }
+
+    .dancing-couple-video {
+      width: 150px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 10px 30px rgba(112, 38, 43, 0.28);
+      mix-blend-mode: multiply;
+      object-fit: cover;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dancing-cartoon-wrap:active .dancing-couple-video {
+      transform: scale(0.95);
+    }
+
+    /* MODALS */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.8rem 1.4rem;
+      max-width: 360px;
+      width: 94%;
+      text-align: center;
+      position: relative;
+      transform: scale(0.88);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 1.5rem;
+      color: var(--text-soft);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+    }
+
+    .modal-qr-img {
+      width: 270px;
+      height: 270px;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+      margin: 0.9rem 0;
+      border: 1px solid var(--line);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    /* TOAST FOR MOBILE THUMBS */
+    .toast {
+      position: fixed;
+      bottom: max(30px, env(safe-area-inset-bottom, 30px));
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(112, 38, 43, 0.96);
+      color: #fff;
+      padding: 0.7rem 1.4rem;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      z-index: 600;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+
+<body class="locked">
+
+  <!-- PARTICLES & CONFETTI CANVAS -->
+  <canvas id="particleCanvas" style="position:fixed; inset:0; pointer-events:none; z-index:99;"></canvas>
+
+  <!-- SCROLL PROGRESS BAR -->
+  <div class="scroll-progress-bar" id="progressBar"></div>
+
+  <!-- MUSIC PLAYER DISC (TOP RIGHT - DRAGGABLE) -->
+  <div class="music-disc-btn" id="musicDiscBtn"
+    title="Bật/Tắt nhạc (Kéo thả icon tự do)">
+    <div class="music-disc-inner">🎵</div>
+    <audio id="bgMusic" loop preload="auto">
+      <source src="Lễ Đường.mp3" type="audio/mpeg">
+      <source src="L%E1%BB%85%20%C4%90%C6%B0%E1%BB%9Dng.mp3" type="audio/mpeg">
+      <source src="assets/le_duong.mp3" type="audio/mpeg">
+      <source src="le_duong.mp3" type="audio/mpeg">
+      <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=wedding-background-music-112776.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+
+
+  <!-- NAVIGATION DRAWER -->
+  <div class="nav-drawer" id="navDrawer" onclick="InvitationApp.toggleNavDrawer(event)">
+    <div class="nav-drawer-content" onclick="event.stopPropagation()">
+      <div>
+        <div class="nav-drawer-close" onclick="InvitationApp.toggleNavDrawer()">&times;</div>
+        <h3 style="font-family:'Alex Brush',cursive; font-size:2.2rem; color:var(--maroon); margin-bottom:1rem;">Vũ Dũng
+          &amp; Thúy Vân</h3>
+        <ul class="nav-links">
+          <li><a href="#hero-intro" onclick="InvitationApp.toggleNavDrawer()">⏱️ Đồng Hồ Đếm Ngược</a></li>
+          <li><a href="#ceremony" onclick="InvitationApp.toggleNavDrawer()">💒 Lễ Thành Hôn</a></li>
+          <li><a href="#location" onclick="InvitationApp.toggleNavDrawer()">📍 Địa Điểm Tổ Chức</a></li>
+          <li><a href="#marry" onclick="InvitationApp.toggleNavDrawer()">💍 Marry Me?</a></li>
+          <li><a href="#about-bride" onclick="InvitationApp.toggleNavDrawer()">👰 Cô Dâu Thúy Vân</a></li>
+          <li><a href="#about-groom" onclick="InvitationApp.toggleNavDrawer()">🤵 Chú Rể Vũ Dũng</a></li>
+          <li><a href="#std" onclick="InvitationApp.toggleNavDrawer()">📅 Save The Date</a></li>
+          <li><a href="#invitation" onclick="InvitationApp.toggleNavDrawer()">💌 Thiệp Mời Cưới</a></li>
+          <li><a href="#gallery" onclick="InvitationApp.toggleNavDrawer()">🖼️ Album Ảnh Cưới</a></li>
+          <li><a href="#gift" onclick="InvitationApp.toggleNavDrawer()">🎁 Gửi Quà Mừng</a></li>
+        </ul>
+      </div>
+      <div style="font-size:0.75rem; color:var(--text-soft); text-align:center;">
+        Made with CineLove 💕
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast"></div>
+
+  <!-- QR MODAL -->
+  <div class="modal" id="qrModal" onclick="InvitationApp.closeQRModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="modal-close" onclick="InvitationApp.closeQRModal()">&times;</span>
+      <h3 id="modalTitle" style="font-family:'Cormorant Garamond',serif; color:var(--maroon-dark);">Mã QR Mừng Cưới</h3>
+      <img id="modalQRImg" class="modal-qr-img" src="" alt="Mã QR VietQR">
+      <p id="modalSub" style="font-size:0.8rem; color:var(--text-soft);"></p>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX MODAL FOR FULL SCREEN PHOTO VIEW -->
+  <div class="modal" id="lightboxModal" onclick="InvitationApp.closeLightbox(event)">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <span class="modal-close" onclick="InvitationApp.closeLightbox()">&times;</span>
+      <img id="lightboxImg" src="" alt="Ảnh cưới phóng to">
+    </div>
+  </div>
+
+  <div class="page" id="mainPage">
+
+    <!-- ============ COVER / ENVELOPE (3D OPENING) ============ -->
+    <div class="cover" id="cover">
+      <div class="eyebrow">Wedding Invitation</div>
+      <div class="cover-heading">Thiệp Mời Cưới</div>
+      <div class="cover-names">Vũ Dũng <span class="amp">&amp;</span> Thúy Vân</div>
+      <div class="emblem" aria-hidden="true">囍</div>
+
+      <div class="envelope-wrap" id="envelopeTap">
+        <div class="envelope" id="envelope">
+          <div class="env-photo-inside"></div>
+          <div class="env-flap-top"></div>
+          <div class="env-pocket-bottom"></div>
+          <div class="env-seal">D&amp;V</div>
+        </div>
+        <div class="tap-hint">✉️ Chạm để mở thiệp cưới</div>
+      </div>
+    </div>
+
+    <!-- ============ SECTION 1: HERO COUNTDOWN & INVITATION INTRO ============ -->
+    <section class="sec-hero-intro" id="hero-intro">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="hero-bg-photo"></div>
+      <div class="hero-scrim"></div>
+
+      <!-- COUNTDOWN BOXES -->
+      <div class="countdown-boxes reveal">
+        <div class="c-box">
+          <div class="num" id="cd-d">128</div>
+          <div class="label">ngày</div>
+        </div>
+        <div class="c-box">
+          <div class="num" id="cd-h">14</div>
+          <div class="label">giờ</div>
+        </div>
+        <div class="c-box">
+          <div class="num" id="cd-m">04</div>
+          <div class="label">phút</div>
+        </div>
+        <div class="c-box">
+          <div class="num" id="cd-s">28</div>
+          <div class="label">giây</div>
+        </div>
+      </div>
+
+      <!-- INVITATION INTRO GLASS CARD -->
+      <div class="inv-intro-glass-card reveal">
+        <div class="title">I N V I T A T I O N</div>
+        <div class="body">
+          Gửi đến gia đình và bạn bè thân mến. Cảm ơn bạn đã dành thời gian quý báu để cùng chúng mình chung vui trong
+          ngày đặc biệt này. Chúng mình vô cùng biết ơn vì luôn có sự đồng hành và ủng hộ của bạn, và thật vinh hạnh khi
+          được chia sẻ niềm hạnh phúc của chúng mình cùng bạn. Trân trọng kính mời bạn đến dự lễ cưới của chúng mình.
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 2: LỄ THÀNH HÔN & TIỆC MỪNG ============ -->
+    <section class="sec-ceremony" id="ceremony">
+      <div class="side-watermark">Made with Cinelove</div>
+
+      <div class="ceremony-top-row reveal">
+        <div class="ceremony-tag">Lễ Thành Hôn</div>
+        <div class="ceremony-names-col">
+          <div class="name">Nguyễn Vũ Dũng</div>
+          <span class="amp">&amp;</span>
+          <div class="name">Phạm Thị Thúy Vân</div>
+        </div>
+      </div>
+
+      <div class="parents-grid reveal">
+        <div class="col">
+          <h4>Nhà Trai</h4>
+          <p>Ông: Nguyễn Văn Thông<br>Bà: Đỗ Thị Dung<br>Thôn Đồi Ngang - Xã Tân Thanh - Tỉnh Ninh Bình</p>
+        </div>
+        <div class="col">
+          <h4>Nhà Gái</h4>
+          <p>Ông: Phạm Văn Tuấn<br>Bà: Nguyễn Thị Nụ<br>Thôn 3 Tâng - Xã Thanh Liêm - Tỉnh Ninh Bình</p>
+        </div>
+      </div>
+
+      <div class="reception-block reveal">
+        <div class="rec-title">TIỆC MỪNG LỄ THÀNH HÔN</div>
+        <div class="rec-sub">VÀO LÚC 10:30 CHỦ NHẬT</div>
+
+        <div class="date-divider-row">
+          <div class="date-line"></div>
+          <div class="date-part">THÁNG <span class="date-val">09</span></div>
+          <div class="date-big-day">20</div>
+          <div class="date-part">NĂM <span class="date-val">2026</span></div>
+          <div class="date-line"></div>
+        </div>
+        <div class="lunar-text">(Tức ngày 10 tháng 08 năm Bính Ngọ)</div>
+      </div>
+
+      <!-- ============ CHƯƠNG TRÌNH LỄ CƯỚI (TIMELINE 2 NGÀY) ============ -->
+      <div class="wedding-timeline-block reveal">
+        <div class="timeline-subtitle">LỊCH TRÌNH SỰ KIỆN</div>
+
+        <div class="timeline-items">
+          <!-- DAY 1: THỨ BẢY 19/09 -->
+          <div class="timeline-item">
+            <div class="timeline-badge-day">
+              <span class="day-name">THỨ BẢY</span>
+              <span class="day-date">19 / 09</span>
+            </div>
+            <div class="timeline-card">
+              <div class="tl-header">
+                <span class="tl-icon">🥂</span>
+                <span class="tl-event-name"> BỮA TIỆC THÂN MẬT</span>
+              </div>
+              <div class="tl-time">🕒 17:30 — Tối Thứ Bảy, 19/09/2026</div>
+              <div class="tl-desc">Mời bạn đến dự tiệc thân mật cùng chúng tôi. Sự hiện diện của bạn là niềm vui của chúng tôi
+              </div>
+            </div>
+          </div>
+
+          <!-- DAY 2: CHỦ NHẬT 20/09 -->
+          <div class="timeline-item">
+            <div class="timeline-badge-day main">
+              <span class="day-name">CHỦ NHẬT</span>
+              <span class="day-date">20 / 09</span>
+            </div>
+            <div class="timeline-card main">
+              <div class="tl-event-group">
+                <div class="tl-sub-event">
+                  <div class="tl-header">
+                    <span class="tl-icon">👰</span>
+                    <span class="tl-event-name">LỄ VU QUY (NHÀ GÁI)</span>
+                  </div>
+                  <div class="tl-time">🕒 09:00 — Sáng Chủ Nhật, 20/09/2026</div>
+                </div>
+
+                <div class="tl-divider"></div>
+
+                <div class="tl-sub-event">
+                  <div class="tl-header">
+                    <span class="tl-icon">🎩</span>
+                    <span class="tl-event-name">LỄ THÀNH HÔN (NHÀ TRAI)</span>
+                  </div>
+                  <div class="tl-time">🕒 10:30 — Sáng Chủ Nhật, 20/09/2026</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 3: ĐỊA ĐIỂM TỔ CHÚC & MAP (NHÀ TRAI & NHÀ GÁI) ============ -->
+    <section class="sec-location" id="location">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="loc-title reveal">ĐỊA ĐIỂM TỔ CHÚC</div>
+
+      <!-- TABS SWITCHER -->
+      <div class="location-tabs reveal">
+        <button type="button" class="loc-tab-btn active" id="tabGroom" onclick="InvitationApp.switchLocTab('groom')">
+          <span>🎩</span> Nhà Trai
+        </button>
+        <button type="button" class="loc-tab-btn" id="tabBride" onclick="InvitationApp.switchLocTab('bride')">
+          <span>👰</span> Nhà Gái
+        </button>
+      </div>
+
+      <!-- LOCATION CARDS -->
+      <div class="location-cards-wrapper reveal">
+        <!-- NHÀ TRAI CARD -->
+        <div class="loc-card active" id="cardGroom">
+          <div class="loc-card-tag">🎩 ĐỊA ĐIỂM NHÀ TRAI</div>
+          <div class="venue-title">TƯ GIA NHÀ TRAI</div>
+          <div class="venue-addr">(Thôn Đồi Ngang - Xã Tân Thanh - Tỉnh Ninh Bình)</div>
+          <div class="venue-time">🕒 Lễ Thành Hôn: 10:30 — Chủ Nhật, 20/09/2026</div>
+
+          <div class="map-card-container">
+            <a href="https://www.google.com/maps/search/?api=1&query=20.47347,105.94786" target="_blank"
+              rel="noopener noreferrer" class="btn-map-overlay">
+              🗺️ Maps Chỉ Đường ↗
+            </a>
+            <iframe class="map-iframe"
+              src="https://maps.google.com/maps?q=20.47347,105.94786&t=&z=16&ie=UTF8&iwloc=B&output=embed"
+              loading="lazy" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <!-- NHÀ GÁI CARD -->
+        <div class="loc-card" id="cardBride">
+          <div class="loc-card-tag">👰 ĐỊA ĐIỂM NHÀ GÁI</div>
+          <div class="venue-title">TƯ GIA NHÀ GÁI</div>
+          <div class="venue-addr">(Thôn 3 Tâng, Xã Thanh Liêm, Tỉnh Ninh Bình)</div>
+          <div class="venue-time">🕒 Tiệc Mừng Lễ Vu Quy: 09:00 — Chủ Nhật, 20/09/2026</div>
+
+          <div class="map-card-container">
+            <a href="https://www.google.com/maps/search/?api=1&query=20.44986,105.91709" target="_blank"
+              rel="noopener noreferrer" class="btn-map-overlay">
+              🗺️ Maps Chỉ Đường ↗
+            </a>
+            <iframe class="map-iframe"
+              src="https://maps.google.com/maps?q=20.44986,105.91709&t=&z=16&ie=UTF8&iwloc=B&output=embed"
+              loading="lazy" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 4: MARRY ME? ============ -->
+    <section class="sec-marry" id="marry">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="marry-header reveal">
+        <div class="sweet-wedding">S W E E T &nbsp; W E D D I N G</div>
+      </div>
+
+      <div class="marry-composition reveal">
+        <div class="marry-title-overlay">
+          M A R R Y<br>M E
+        </div>
+        <div class="marry-photo-main">
+          <img src="hero_couple.png" alt="Chú rể & Cô dâu">
+        </div>
+        <div class="marry-photo-sub">
+          <img src="bride_dress.png" alt="Cô dâu Thúy Vân">
+        </div>
+        <div class="yes-ido-overlay">
+          <div class="yes-text">Y E S !</div>
+          <div class="ido-text">I D O 💕</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 5: ABOUT US - BRIDE ============ -->
+    <section class="sec-about-bride" id="about-bride">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="about-sec-title reveal">
+        <span class="sparkle">✨</span> About us
+      </div>
+
+      <div class="bride-top-row reveal">
+        <div class="info-card-box">
+          <div class="person-name">Phạm Thị Thúy Vân</div>
+        </div>
+        <div class="bride-portrait-frame">
+          <img src="bride_portrait.png" alt="Cô dâu Thúy Vân">
+        </div>
+      </div>
+
+      <div class="couple-banner-frame reveal">
+        <img src="couple_horizontal.png" alt="Đôi bạn trẻ">
+        <div class="vertical-label">Bride</div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 6: ABOUT US - GROOM ============ -->
+    <section class="sec-about-groom" id="about-groom">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="about-sec-title reveal">
+        <span class="sparkle">✨</span> About us
+      </div>
+
+      <div class="groom-top-row reveal">
+        <div class="bride-portrait-frame">
+          <img src="groom_portrait.png" alt="Chú rể Vũ Dũng">
+        </div>
+        <div class="info-card-box">
+          <div class="person-name">Nguyễn Vũ Dũng</div>
+        </div>
+      </div>
+
+      <div class="couple-banner-frame reveal">
+        <img src="couple_bottom.png" alt="Vũ Dũng & Thúy Vân">
+        <div class="vertical-label">Groom</div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 7: SAVE THE DATE ============ -->
+    <section class="sec-std" id="std">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="std-header reveal">
+        <div class="std-title">✨ Save the date</div>
+        <div class="std-badge">20 / Sep</div>
+      </div>
+
+      <div class="std-photo-container reveal">
+        <img src="save_date_photo.png" alt="Save the date photo">
+
+        <!-- GLASSMORPHISM CALENDAR -->
+        <div class="std-calendar-glass">
+          <div
+            style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--maroon); margin-bottom:0.4rem; font-weight:600;">
+            Tháng 9 - 2026
+          </div>
+          <div class="std-cal-grid">
+            <div class="d">1</div>
+            <div class="d">2</div>
+            <div class="d">3</div>
+            <div class="d">4</div>
+            <div class="d">5</div>
+            <div class="d">6</div>
+            <div class="d">7</div>
+            <div class="d">8</div>
+            <div class="d">9</div>
+            <div class="d">10</div>
+            <div class="d">11</div>
+            <div class="d">12</div>
+            <div class="d">13</div>
+            <div class="d">14</div>
+            <div class="d">15</div>
+            <div class="d">16</div>
+            <div class="d">17</div>
+            <div class="d">18</div>
+            <div class="d">19</div>
+            <div class="d hl">20</div>
+            <div class="d">21</div>
+            <div class="d">22</div>
+            <div class="d">23</div>
+            <div class="d">24</div>
+            <div class="d">25</div>
+            <div class="d">26</div>
+            <div class="d">27</div>
+            <div class="d">28</div>
+            <div class="d">29</div>
+            <div class="d">30</div>
+            <div class="d">31</div>
+          </div>
+        </div>
+      </div>
+
+      
+    </section>
+
+    <!-- ============ SECTION 8: INVITATION PHOTO STACK ============ -->
+    <section class="sec-invitation" id="invitation">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="inv-top-title reveal">I N V I T A T I O N</div>
+
+      <div class="inv-stack-container reveal">
+        <div class="side-text-left">I love you forever</div>
+        <div class="side-text-right">Nice to meet you</div>
+
+        <div class="inv-frame"><img src="stack1.png" alt="Ảnh kỷ niệm 1"></div>
+        <div class="inv-frame"><img src="stack2.png" alt="Ảnh kỷ niệm 2"></div>
+        <div class="inv-frame"><img src="stack3.png" alt="Ảnh kỷ niệm 3"></div>
+      </div>
+
+      <a href="#gallery" class="btn-gallery-trigger reveal">🖼️ Xem Album Ảnh Cưới</a>
+    </section>
+
+    <!-- ============ SECTION 9: ALBUM ẢNH CƯỚI TƯƠNG TÁC (PRO GESTURE SLIDER) ---------------- -->
+    <section class="sec-gallery" id="gallery">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="center reveal" style="margin-bottom:1.5rem;">
+        <div class="eyebrow">Kỷ Niệm</div>
+        <h2
+          style="font-family:'Cormorant Garamond',serif; font-size:2.2rem; color:var(--maroon-dark); font-style:italic;">
+          Album Ảnh Cưới</h2>
+      </div>
+
+      <div class="gallery-card reveal">
+        <div class="gallery-featured" id="galleryFeaturedWrap">
+          <img id="galleryMainImg" src="hero_couple.png" alt="Ảnh cưới chính">
+          <div class="gallery-badge" id="galleryBadge">1 / 6</div>
+          <div class="gallery-zoom-hint">🔍 Nhấn để phóng to / Vuốt đổi ảnh 👈👉</div>
+
+          <button class="gallery-nav prev"
+            onclick="event.stopPropagation(); InvitationApp.prevSlide();">&lsaquo;</button>
+          <button class="gallery-nav next"
+            onclick="event.stopPropagation(); InvitationApp.nextSlide();">&rsaquo;</button>
+        </div>
+
+        <div class="gallery-thumbs" id="galleryThumbs">
+          <div class="thumb active" onclick="InvitationApp.setSlide(0)"><img src="hero_couple.png" alt="Thumb 1">
+          </div>
+          <div class="thumb" onclick="InvitationApp.setSlide(1)"><img src="bride_portrait.png" alt="Thumb 2">
+          </div>
+          <div class="thumb" onclick="InvitationApp.setSlide(2)"><img src="groom_portrait.png" alt="Thumb 3">
+          </div>
+          <div class="thumb" onclick="InvitationApp.setSlide(3)"><img src="couple_horizontal.png" alt="Thumb 4">
+          </div>
+          <div class="thumb" onclick="InvitationApp.setSlide(4)"><img src="save_date_photo.png" alt="Thumb 5">
+          </div>
+          <div class="thumb" onclick="InvitationApp.setSlide(5)"><img src="couple_bottom.png" alt="Thumb 6">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 10: GỬI QUÀ MỪNG ============ -->
+    <section class="sec-gift" id="gift">
+      <div class="side-watermark">Made with Cinelove</div>
+      <div class="gift-title reveal">GỬI QUÀ MỪNG</div>
+
+      <!-- CÔ DÂU -->
+      <div class="gift-card-row reveal">
+        <div class="gift-avatar-circle">
+          <img src="bride_portrait.png" alt="Cô dâu Thúy Vân">
+        </div>
+        <div class="gift-card-content">
+          <div class="gift-info">
+            <div class="role">Cô dâu</div>
+            <div class="who">Phạm Thị Thúy Vân</div>
+            <div class="acc">Vietcombank : 1063303696 </div>
+            <button class="btn-copy"
+              onclick="InvitationApp.copySTK('1063303696', 'Vietcombank - Phạm Thị Thúy Vân', event)">📋 Sao chép
+              STK</button>
+          </div>
+          <div class="qr-box-wrap"
+            onclick="InvitationApp.openQRModal('https://img.vietqr.io/image/Vietcombank-1063303696-compact2.png?accountNo=1063303696&accountName=PHAM%20THI%20THUY%20VAN&bankId=STIP&accountType=ACCOUNT_TYPE_ACCOUNT_TYPE_B&description=Mung%20cuoi%20Thuy%20Van&amount=0&addInfo=Mung%20cuoi%20Thuy%20Van', 'Cô dâu Phạm Thị Thúy Vân', 'Vietcombank : 1063303696', event)">
+            <img class="qr-img"
+              src="https://img.vietqr.io/image/Vietcombank-1063303696-compact2.png?accountNo=1063303696&accountName=PHAM%20THI%20THUY%20VAN&bankId=STIP&accountType=ACCOUNT_TYPE_ACCOUNT_TYPE_B&description=Mung%20cuoi%20Thuy%20Van&amount=0&addInfo=Mung%20cuoi%20Thuy%20Van"
+              alt="QR Thúy Vân">
+          </div>
+        </div>
+      </div>
+
+      <!-- CHÚ RỂ -->
+      <div class="gift-card-row rev reveal">
+        <div class="gift-card-content">
+          <div class="qr-box-wrap"
+            onclick="InvitationApp.openQRModal('https://img.vietqr.io/image/Vietcombank-9886781944-compact2.png?accountNo=9886781944&accountName=NGUYEN%20VU%20DUNG&bankId=STIP&accountType=ACCOUNT_TYPE_ACCOUNT_TYPE_B&description=Mung%20cuoi%20Vu%20Dung&amount=0&addInfo=Mung%20cuoi%20Vu%20Dung', 'Chú rể Nguyễn Vũ Dũng', 'Vietcombank : 9886781944', event)">
+            <img class="qr-img"
+              src="https://img.vietqr.io/image/Vietcombank-9886781944-compact2.png?accountNo=9886781944&accountName=NGUYEN%20VU%20DUNG&bankId=STIP&accountType=ACCOUNT_TYPE_ACCOUNT_TYPE_B&description=Mung%20cuoi%20Vu%20Dung&amount=0&addInfo=Mung%20cuoi%20Vu%20Dung"
+              alt="QR Vũ Dũng">
+          </div>
+          <div class="gift-info">
+            <div class="role">Chú rể</div>
+            <div class="who">Nguyễn Vũ Dũng</div>
+            <div class="acc">Vietcombank : 9886781944 </div>
+            <button class="btn-copy" onclick="InvitationApp.copySTK('9886781944', 'Vietcombank - Nguyễn Vũ Dũng', event)">📋
+              Sao chép STK</button>
+          </div>
+        </div>
+        <div class="gift-avatar-circle">
+          <img src="groom_portrait.png" alt="Chú rể Vũ Dũng">
+        </div>
+      </div>
+
+      <!-- CUSTOM VIDEO ANIMATED STICKER (GROOM TWIRLING THE BRIDE - VIDEO MẪU TỪ BẠN) -->
+      <div class="dancing-cartoon-wrap reveal" id="cartoonCoupleSticker" onclick="InvitationApp.danceBurst(event)"
+        title="Chú rể & Cô dâu khiêu vũ động">
+        <video class="dancing-couple-video" autoplay loop muted playsinline webkit-playsinline>
+          <source src="assets/Groom twirling the bride.mp4" type="video/mp4">
+          <source src="Groom twirling the bride.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <div class="center reveal" style="font-size:0.85rem; color:var(--maroon); font-weight:500; margin-top:0.4rem;">
+        Vũ Dũng &amp; Thúy Vân trân trọng cảm ơn! 💕
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ==================== PROFESSIONAL JS APPLICATION MODULE ==================== -->
+  <script>
+    /**
+     * CINELOVE CLEAN ENGINE (WITH DRAGGABLE FLOATING ICONS)
+     */
+    const InvitationApp = (function () {
+      const WED_TARGET = new Date(2026, 8, 20, 10, 30, 0).getTime();
+      const galleryImages = [
+        'hero_couple.png',
+        'bride_portrait.png',
+        'groom_portrait.png',
+        'couple_horizontal.png',
+        'save_date_photo.png',
+        'couple_bottom.png'
+      ];
+
+      let currentSlide = 0;
+      let autoSlideTimer = null;
+      let isMusicPlaying = false;
+      let particleCanvas, particleCtx, particles = [];
+
+      // --- Make Elements Draggable (Touch & Mouse) ---
+      function makeDraggable(el, onClickCallback) {
+        if (!el) return;
+        let startX = 0, startY = 0;
+        let initialLeft = 0, initialTop = 0;
+        let isDragging = false;
+
+        el.addEventListener('pointerdown', (e) => {
+          const rect = el.getBoundingClientRect();
+          startX = e.clientX;
+          startY = e.clientY;
+          initialLeft = rect.left;
+          initialTop = rect.top;
+          isDragging = false;
+          el.setPointerCapture(e.pointerId);
+
+          const onPointerMove = (moveEv) => {
+            const dx = moveEv.clientX - startX;
+            const dy = moveEv.clientY - startY;
+
+            if (Math.hypot(dx, dy) > 6) {
+              isDragging = true;
+            }
+
+            if (isDragging) {
+              let newLeft = initialLeft + dx;
+              let newTop = initialTop + dy;
+
+              newLeft = Math.max(10, Math.min(window.innerWidth - rect.width - 10, newLeft));
+              newTop = Math.max(10, Math.min(window.innerHeight - rect.height - 10, newTop));
+
+              el.style.position = 'fixed';
+              el.style.left = newLeft + 'px';
+              el.style.top = newTop + 'px';
+              el.style.right = 'auto';
+              el.style.bottom = 'auto';
+            }
+          };
+
+          const onPointerUp = (upEv) => {
+            el.releasePointerCapture(upEv.pointerId);
+            el.removeEventListener('pointermove', onPointerMove);
+            el.removeEventListener('pointerup', onPointerUp);
+
+            if (!isDragging && typeof onClickCallback === 'function') {
+              onClickCallback(upEv);
+            }
+          };
+
+          el.addEventListener('pointermove', onPointerMove);
+          el.addEventListener('pointerup', onPointerUp);
+        });
+      }
+
+      // --- Canvas Particles ---
+      function initParticles() {
+        particleCanvas = document.getElementById('particleCanvas');
+        if (!particleCanvas) return;
+        particleCtx = particleCanvas.getContext('2d');
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas, { passive: true });
+
+        for (let i = 0; i < 18; i++) {
+          particles.push(createParticle());
+        }
+        requestAnimationFrame(renderParticles);
+      }
+
+      function resizeCanvas() {
+        if (!particleCanvas) return;
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
+      }
+
+      function createParticle(x, y, isBurst = false) {
+        const colors = ['#e2a5ab', '#f07481', '#70262b', '#ffd700'];
+        return {
+          x: x !== undefined ? x : Math.random() * particleCanvas.width,
+          y: y !== undefined ? y : Math.random() * particleCanvas.height,
+          size: isBurst ? Math.random() * 9 + 4 : Math.random() * 6 + 3,
+          speedX: isBurst ? (Math.random() - 0.5) * 7 : (Math.random() - 0.5) * 0.8,
+          speedY: isBurst ? (Math.random() - 0.5) * 7 : Math.random() * 0.8 + 0.4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: isBurst ? 1 : Math.random() * 0.7 + 0.3,
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.05,
+          isBurst: isBurst,
+          life: 1
+        };
+      }
+
+      function renderParticles() {
+        if (!particleCtx) return;
+        particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.speedX;
+          p.y += p.speedY;
+          p.rotation += p.rotSpeed;
+
+          if (p.isBurst) {
+            p.life -= 0.02;
+            p.opacity = Math.max(0, p.life);
+            if (p.life <= 0) {
+              particles.splice(i, 1);
+              continue;
+            }
+          } else {
+            if (p.y > particleCanvas.height + 20) p.y = -10;
+            if (p.x > particleCanvas.width + 20) p.x = -10;
+            if (p.x < -20) p.x = particleCanvas.width + 10;
+          }
+
+          particleCtx.save();
+          particleCtx.translate(p.x, p.y);
+          particleCtx.rotate(p.rotation);
+          particleCtx.globalAlpha = p.opacity;
+          particleCtx.fillStyle = p.color;
+
+          particleCtx.beginPath();
+          particleCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          particleCtx.fill();
+          particleCtx.restore();
+        }
+
+        requestAnimationFrame(renderParticles);
+      }
+
+      function triggerConfettiBurst(x, y) {
+        for (let i = 0; i < 30; i++) {
+          particles.push(createParticle(x, y, true));
+        }
+      }
+
+      function danceBurst(e) {
+        if (e) triggerConfettiBurst(e.clientX, e.clientY);
+        showToast("💃 Vũ Dũng & Thúy Vân khiêu vũ 💕");
+      }
+
+      // --- Scroll Progress ---
+      function initScrollProgress() {
+        const progressBar = document.getElementById('progressBar');
+        window.addEventListener('scroll', () => {
+          const totalH = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = (window.scrollY / totalH) * 100;
+          if (progressBar) progressBar.style.width = `${progress}%`;
+        }, { passive: true });
+      }
+
+      // --- Real-time Countdown ---
+      function tickCountdown() {
+        const diff = Math.max(0, WED_TARGET - Date.now());
+        const d = Math.floor(diff / 86400000);
+        const h = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+        const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+        const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+
+        document.getElementById('cd-d').textContent = d;
+        document.getElementById('cd-h').textContent = h;
+        document.getElementById('cd-m').textContent = m;
+        document.getElementById('cd-s').textContent = s;
+      }
+
+      // --- Swipe Gesture ---
+      function initSwipeGesture() {
+        const sliderWrap = document.getElementById('galleryFeaturedWrap');
+        if (!sliderWrap) return;
+
+        let startX = 0, startY = 0, distX = 0, distY = 0;
+
+        sliderWrap.addEventListener('touchstart', (e) => {
+          const touch = e.touches[0];
+          startX = touch.clientX;
+          startY = touch.clientY;
+        }, { passive: true });
+
+        sliderWrap.addEventListener('touchend', (e) => {
+          const touch = e.changedTouches[0];
+          distX = touch.clientX - startX;
+          distY = touch.clientY - startY;
+
+          if (Math.abs(distX) > 40 && Math.abs(distX) > Math.abs(distY)) {
+            if (distX < 0) nextSlide();
+            else prevSlide();
+          } else if (Math.abs(distX) < 10 && Math.abs(distY) < 10) {
+            openLightbox();
+          }
+        }, { passive: true });
+      }
+
+      // --- Scroll Reveal ---
+      function initScrollReveal() {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+      }
+
+      // --- Public Methods ---
+      function init() {
+        initParticles();
+        initScrollProgress();
+        initScrollReveal();
+        initSwipeGesture();
+        tickCountdown();
+        setInterval(tickCountdown, 1000);
+
+        // Make Music Disc DRAGGABLE
+        makeDraggable(document.getElementById('musicDiscBtn'), toggleMusic);
+
+        const cover = document.getElementById('cover');
+        const envelope = document.getElementById('envelope');
+        const envTap = document.getElementById('envelopeTap');
+
+        if (envTap) {
+          envTap.addEventListener('click', (e) => {
+            envelope.classList.add('tapped');
+            triggerConfettiBurst(e.clientX, e.clientY);
+            setTimeout(() => {
+              cover.classList.add('opened');
+              document.body.classList.remove('locked');
+              playMusic();
+            }, 650);
+          });
+        }
+
+        document.addEventListener('pointerdown', (e) => {
+          if (e.clientY < window.innerHeight - 80) {
+            triggerConfettiBurst(e.clientX, e.clientY);
+          }
+        }, { passive: true });
+      }
+
+      function playMusic() {
+        const bgMusic = document.getElementById('bgMusic');
+        const musicDiscBtn = document.getElementById('musicDiscBtn');
+        if (!bgMusic) return;
+
+        bgMusic.play().then(() => {
+          isMusicPlaying = true;
+          if (musicDiscBtn) musicDiscBtn.classList.add('playing');
+        }).catch(err => console.log("Autoplay restriction:", err));
+      }
+
+      function toggleMusic() {
+        const bgMusic = document.getElementById('bgMusic');
+        const musicDiscBtn = document.getElementById('musicDiscBtn');
+        if (!bgMusic) return;
+
+        if (!bgMusic.paused) {
+          bgMusic.pause();
+          isMusicPlaying = false;
+          if (musicDiscBtn) musicDiscBtn.classList.remove('playing');
+          showToast("🔇 Đã tắt nhạc nền");
+        } else {
+          bgMusic.play().then(() => {
+            isMusicPlaying = true;
+            if (musicDiscBtn) musicDiscBtn.classList.add('playing');
+            showToast("🎵 Đang phát nhạc nền");
+          }).catch(err => console.log("Autoplay restriction:", err));
+        }
+      }
+
+      function toggleNavDrawer(e) {
+        const navDrawer = document.getElementById('navDrawer');
+        if (navDrawer) navDrawer.classList.toggle('active');
+      }
+
+      function setSlide(index) {
+        currentSlide = (index + galleryImages.length) % galleryImages.length;
+        const mainImg = document.getElementById('galleryMainImg');
+        if (mainImg) {
+          mainImg.style.opacity = '0.3';
+          mainImg.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            mainImg.src = galleryImages[currentSlide];
+            mainImg.style.opacity = '1';
+            mainImg.style.transform = 'scale(1)';
+          }, 150);
+        }
+
+        const badge = document.getElementById('galleryBadge');
+        if (badge) badge.textContent = `${currentSlide + 1} / ${galleryImages.length}`;
+
+        const thumbs = document.querySelectorAll('.thumb');
+        thumbs.forEach((t, i) => {
+          if (i === currentSlide) t.classList.add('active');
+          else t.classList.remove('active');
+        });
+      }
+
+      function nextSlide() { setSlide(currentSlide + 1); resetAutoSlide(); }
+      function prevSlide() { setSlide(currentSlide - 1); resetAutoSlide(); }
+
+      function startAutoSlide() {
+        autoSlideTimer = setInterval(() => setSlide(currentSlide + 1), 4000);
+      }
+      function resetAutoSlide() {
+        clearInterval(autoSlideTimer);
+        startAutoSlide();
+      }
+      startAutoSlide();
+
+      function openLightbox() {
+        const lbImg = document.getElementById('lightboxImg');
+        const lbModal = document.getElementById('lightboxModal');
+        if (lbImg && lbModal) {
+          lbImg.src = galleryImages[currentSlide];
+          lbModal.classList.add('active');
+        }
+      }
+
+      function closeLightbox(e) {
+        const lbModal = document.getElementById('lightboxModal');
+        if (lbModal) lbModal.classList.remove('active');
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3200);
+      }
+
+      function copySTK(stk, ownerInfo, e) {
+        if (e) triggerConfettiBurst(e.clientX, e.clientY);
+        navigator.clipboard.writeText(stk).then(() => {
+          showToast(`✅ Đã sao chép STK: ${stk} (${ownerInfo})`);
+        }).catch(() => {
+          showToast(`STK: ${stk}`);
+        });
+      }
+
+      function openQRModal(qrUrl, name, acc, e) {
+        if (e) triggerConfettiBurst(e.clientX, e.clientY);
+        document.getElementById('modalQRImg').src = qrUrl;
+        document.getElementById('modalTitle').textContent = `Mừng Cưới - ${name}`;
+        document.getElementById('modalSub').textContent = acc;
+        document.getElementById('qrModal').classList.add('active');
+      }
+
+      function closeQRModal(e) {
+        document.getElementById('qrModal').classList.remove('active');
+      }
+
+      function switchLocTab(type) {
+        const tabGroom = document.getElementById('tabGroom');
+        const tabBride = document.getElementById('tabBride');
+        const cardGroom = document.getElementById('cardGroom');
+        const cardBride = document.getElementById('cardBride');
+
+        if (type === 'groom') {
+          if (tabGroom) tabGroom.classList.add('active');
+          if (tabBride) tabBride.classList.remove('active');
+          if (cardGroom) cardGroom.classList.add('active');
+          if (cardBride) cardBride.classList.remove('active');
+        } else {
+          if (tabBride) tabBride.classList.add('active');
+          if (tabGroom) tabGroom.classList.remove('active');
+          if (cardBride) cardBride.classList.add('active');
+          if (cardGroom) cardGroom.classList.remove('active');
+        }
+      }
+
+      return {
+        init,
+        toggleMusic,
+        toggleNavDrawer,
+        switchLocTab,
+        setSlide,
+        nextSlide,
+        prevSlide,
+        openLightbox,
+        closeLightbox,
+        copySTK,
+        openQRModal,
+        closeQRModal,
+        danceBurst
+      };
+    })();
+
+    document.addEventListener('DOMContentLoaded', InvitationApp.init);
+  </script>
+</body>
+
+</html>
