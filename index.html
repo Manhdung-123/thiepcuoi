@@ -1061,13 +1061,12 @@
       color: #fff;
     }
 
-    /* ---------------- SECTION 4: MARRY ME? ---------------- */
+    /* ---------------- SECTION 4: MARRY ME? (MODERN SPLIT OFFSET) ---------------- */
     .sec-marry {
-      padding: 2rem 1.2rem 3.5rem;
+      padding: 2.6rem 1.2rem 3rem;
       position: relative;
       background: var(--bg);
       border-top: 1px solid var(--line);
-      min-height: 520px;
     }
 
     .marry-header {
@@ -1078,68 +1077,42 @@
     .marry-header .sweet-wedding {
       font-family: 'EB Garamond', serif;
       letter-spacing: 0.4em;
-      font-size: 1rem;
-      color: var(--maroon);
+      font-size: 0.95rem;
+      color: var(--maroon-soft);
       font-weight: 600;
       text-transform: uppercase;
+      margin-bottom: 0.2rem;
     }
 
-    .marry-composition {
-      position: relative;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .marry-photo-main {
-      width: 74%;
-      margin-left: auto;
-      border: 1.5px solid var(--maroon);
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(112, 38, 43, 0.2);
-      background: #fff;
-      position: relative;
-      z-index: 1;
-      aspect-ratio: 3/4;
-    }
-
-    .marry-photo-main img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      display: block;
-    }
-
-    .marry-title-overlay {
-      position: absolute;
-      top: 4px;
-      left: 0;
-      z-index: 10;
+    .marry-title-top {
       font-family: 'EB Garamond', serif;
-      font-size: clamp(2.2rem, 8vw, 2.8rem);
+      font-size: clamp(2.2rem, 7.5vw, 2.7rem);
       font-weight: 700;
       color: var(--maroon);
       line-height: 1.1;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      pointer-events: none;
     }
 
-    .marry-photo-sub {
-      width: 62%;
-      margin-top: -38%;
-      position: relative;
-      z-index: 5;
+    .marry-stagger-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      align-items: flex-start;
+      margin-top: 1rem;
+    }
+
+    .marry-card-left {
+      margin-top: 2rem;
       border: 1.5px solid var(--maroon);
-      border-radius: 4px;
+      border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 10px 25px rgba(112, 38, 43, 0.25);
+      box-shadow: 0 8px 24px rgba(112, 38, 43, 0.18);
       background: #fff;
       aspect-ratio: 3/4;
     }
 
-    .marry-photo-sub img {
+    .marry-card-left img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -1147,28 +1120,43 @@
       display: block;
     }
 
-    .yes-ido-overlay {
-      position: absolute;
-      right: 0;
-      bottom: 8px;
-      z-index: 10;
-      text-align: right;
+    .marry-card-right {
+      margin-top: 0;
+      border: 1.5px solid var(--maroon);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(112, 38, 43, 0.18);
+      background: #fff;
+      aspect-ratio: 3/4;
+    }
+
+    .marry-card-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .yes-ido-footer {
+      text-align: center;
+      margin-top: 1.8rem;
       font-family: 'EB Garamond', serif;
       color: var(--maroon);
     }
 
-    .yes-ido-overlay .yes-text {
-      font-size: clamp(2rem, 7vw, 2.5rem);
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: 0.06em;
-    }
-
-    .yes-ido-overlay .ido-text {
+    .yes-ido-footer .yes-text {
       font-size: clamp(1.8rem, 6.5vw, 2.3rem);
       font-weight: 700;
       line-height: 1;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
+    }
+
+    .yes-ido-footer .ido-text {
+      font-size: clamp(1.6rem, 6vw, 2.1rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.08em;
     }
 
     /* ---------------- SECTION 5 & 6: ABOUT US ---------------- */
@@ -1895,11 +1883,10 @@
     title="Bật/Tắt nhạc (Kéo thả icon tự do)">
     <div class="music-disc-inner">🎵</div>
     <audio id="bgMusic" loop preload="auto">
-      <source src="Lễ Đường.mp3" type="audio/mpeg">
-      <source src="L%E1%BB%85%20%C4%90%C6%B0%E1%BB%9Dng.mp3" type="audio/mpeg">
-      <source src="assets/le_duong.mp3" type="audio/mpeg">
-      <source src="le_duong.mp3" type="audio/mpeg">
-      <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=wedding-background-music-112776.mp3" type="audio/mpeg">
+      <source src="Váy Cưới.mp3" type="audio/mpeg">
+      <source src="V%C3%A1y%20C%C6%B0%E1%BB%9Bi.mp3" type="audio/mpeg">
+      <source src="assets/Váy Cưới.mp3" type="audio/mpeg">
+      <source src="assets/V%C3%A1y%20C%C6%B0%E1%BB%9Bi.mp3" type="audio/mpeg">
     </audio>
   </div>
 
@@ -2156,27 +2143,26 @@
       </div>
     </section>
 
-    <!-- ============ SECTION 4: MARRY ME? ============ -->
+    <!-- ============ SECTION 4: MARRY ME? (MODERN SPLIT OFFSET) ============ -->
     <section class="sec-marry" id="marry">
       <div class="side-watermark">Made with Cinelove</div>
       <div class="marry-header reveal">
         <div class="sweet-wedding">S W E E T &nbsp; W E D D I N G</div>
+        <div class="marry-title-top">M A R R Y &nbsp; M E</div>
       </div>
 
-      <div class="marry-composition reveal">
-        <div class="marry-title-overlay">
-          M A R R Y<br>M E
+      <div class="marry-stagger-grid reveal">
+        <div class="marry-card-left">
+          <img src="assets/VEO_6580.jpg" alt="Vũ Dũng & Thúy Vân">
         </div>
-        <div class="marry-photo-main">
-          <img src="assets/VEO_6801.jpg" alt="Chú rể & Cô dâu">
+        <div class="marry-card-right">
+          <img src="assets/VEO_6801.jpg" alt="Vũ Dũng & Thúy Vân - Save The Date">
         </div>
-        <div class="marry-photo-sub">
-          <img src="assets/VEO_6580.jpg" alt="Cô dâu Thúy Vân">
-        </div>
-        <div class="yes-ido-overlay">
-          <div class="yes-text">Y E S !</div>
-          <div class="ido-text">I D O 💕</div>
-        </div>
+      </div>
+
+      <div class="yes-ido-footer reveal">
+        <span class="yes-text">Y E S ! &nbsp;</span>
+        <span class="ido-text">I &nbsp; D O 💕</span>
       </div>
     </section>
 
