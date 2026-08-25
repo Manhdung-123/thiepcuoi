@@ -1757,10 +1757,11 @@
       transform: scale(1.05);
     }
 
-    /* CUSTOM VIDEO ANIMATED STICKER (GROOM TWIRLING THE BRIDE) */
-    .dancing-cartoon-wrap {
-      width: 160px;
-      margin: 2rem auto 1rem;
+    /* FOOTER COUPLE PHOTO FRAME */
+    .footer-photo-wrap {
+      width: 85%;
+      max-width: 320px;
+      margin: 2rem auto 1.2rem;
       display: block;
       text-align: center;
       cursor: pointer;
@@ -1768,22 +1769,23 @@
       z-index: 20;
     }
 
-    .dancing-couple-video {
-      width: 150px;
-      max-width: 100%;
+    .footer-couple-photo {
+      width: 100%;
       height: auto;
+      aspect-ratio: 3/4;
       display: block;
       margin: 0 auto;
-      border-radius: 16px;
-      border: 2px solid rgba(255, 255, 255, 0.85);
-      box-shadow: 0 10px 30px rgba(112, 38, 43, 0.28);
-      mix-blend-mode: multiply;
+      border-radius: 12px;
+      border: 1.5px solid var(--maroon);
+      box-shadow: 0 10px 30px rgba(112, 38, 43, 0.22);
       object-fit: cover;
+      object-position: center top;
+      background: #fff;
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .dancing-cartoon-wrap:active .dancing-couple-video {
-      transform: scale(0.95);
+    .footer-photo-wrap:active .footer-couple-photo {
+      transform: scale(0.97);
     }
 
     /* MODALS */
@@ -2374,13 +2376,10 @@
         </div>
       </div>
 
-      <!-- CUSTOM VIDEO ANIMATED STICKER (GROOM TWIRLING THE BRIDE - VIDEO MẪU TỪ BẠN) -->
-      <div class="dancing-cartoon-wrap reveal" id="cartoonCoupleSticker" onclick="InvitationApp.danceBurst(event)"
-        title="Chú rể & Cô dâu khiêu vũ động">
-        <video class="dancing-couple-video" autoplay loop muted playsinline webkit-playsinline>
-          <source src="assets/Groom twirling the bride.mp4" type="video/mp4">
-          <source src="Groom twirling the bride.mp4" type="video/mp4">
-        </video>
+      <!-- FOOTER COUPLE PHOTO (VŨ DŨNG & THÚY VÂN) -->
+      <div class="footer-photo-wrap reveal" id="footerCoupleSticker" onclick="InvitationApp.danceBurst(event)"
+        title="Vũ Dũng & Thúy Vân 💕">
+        <img class="footer-couple-photo" src="assets/images.jpg" alt="Vũ Dũng & Thúy Vân">
       </div>
 
       <div class="center reveal" style="font-size:0.85rem; color:var(--maroon); font-weight:500; margin-top:0.4rem;">
