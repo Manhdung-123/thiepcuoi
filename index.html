@@ -1867,6 +1867,102 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+
+    /* GUEST PERSONALIZED BADGE */
+    .guest-cover-badge {
+      margin: 0.3rem 0 0.6rem;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px dashed var(--maroon-soft);
+      border-radius: 20px;
+      padding: 0.3rem 0.9rem;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(112, 38, 43, 0.08);
+      backdrop-filter: blur(4px);
+    }
+
+    .guest-cover-badge .g-label {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+      font-family: 'Jost', sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    .guest-cover-badge .g-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--maroon);
+      line-height: 1.2;
+    }
+
+    /* GUEST LINK GENERATOR BOX */
+    .guest-gen-container {
+      margin-top: 2.2rem;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(112, 38, 43, 0.08);
+    }
+
+    .gen-box-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--maroon);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .gen-box-sub {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      margin-bottom: 0.8rem;
+    }
+
+    .gen-input-wrap {
+      display: flex;
+      gap: 0.4rem;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .gen-input-wrap input {
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      outline: none;
+      background: #fff;
+    }
+
+    .gen-input-wrap input:focus {
+      border-color: var(--maroon);
+    }
+
+    .btn-gen-link {
+      background: var(--maroon);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 0.9rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-gen-link:active {
+      background: var(--maroon-dark);
+    }
   </style>
 </head>
 
@@ -1944,6 +2040,13 @@
       <div class="eyebrow">Wedding Invitation</div>
       <div class="cover-heading">Thiệp Mời Cưới</div>
       <div class="cover-names">Vũ Dũng <span class="amp">&amp;</span> Thúy Vân</div>
+      
+      <!-- GUEST PERSONALIZED BADGE -->
+      <div class="guest-cover-badge" id="guestCoverBadge">
+        <span class="g-label">Trân trọng kính mời</span>
+        <span class="g-name" id="guestNameCover">Quý khách &amp; Gia đình</span>
+      </div>
+
       <div class="emblem" aria-hidden="true">囍</div>
 
       <div class="envelope-wrap" id="envelopeTap">
@@ -1987,9 +2090,7 @@
       <div class="inv-intro-glass-card reveal">
         <div class="title">I N V I T A T I O N</div>
         <div class="body">
-          Gửi đến gia đình và bạn bè thân mến. Cảm ơn bạn đã dành thời gian quý báu để cùng chúng mình chung vui trong
-          ngày đặc biệt này. Chúng mình vô cùng biết ơn vì luôn có sự đồng hành và ủng hộ của bạn, và thật vinh hạnh khi
-          được chia sẻ niềm hạnh phúc của chúng mình cùng bạn. Trân trọng kính mời bạn đến dự lễ cưới của chúng mình.
+          Gửi đến <strong id="guestNameIntro" style="color:var(--maroon); font-weight:600;">Quý khách &amp; Gia đình</strong> thân mến. Cảm ơn bạn đã dành thời gian quý báu để cùng chúng mình chung vui trong ngày đặc biệt này. Chúng mình vô cùng biết ơn vì luôn có sự đồng hành và ủng hộ của bạn, và thật vinh hạnh khi được chia sẻ niềm hạnh phúc của chúng mình cùng bạn. Trân trọng kính mời bạn đến dự lễ cưới của chúng mình.
         </div>
       </div>
     </section>
@@ -2383,6 +2484,16 @@
       <div class="center reveal" style="font-size:0.85rem; color:var(--maroon); font-weight:500; margin-top:0.4rem;">
         Chúng tôi xin trân trọng cảm ơn! 💕
       </div>
+
+      <!-- TOOL TẠO LINK GỬI KHÁCH MỜI CÁ NHÂN HÓA -->
+      <div class="guest-gen-container reveal">
+        <div class="gen-box-title">💌 TẠO LINK GỬI KHÁCH MỜI</div>
+        <div class="gen-box-sub">Nhập tên khách (ví dụ: Bạn Huy, Anh Nam, Chị Mai &amp; Gia đình) để tạo link riêng:</div>
+        <div class="gen-input-wrap">
+          <input type="text" id="guestInputName" placeholder="Nhập tên khách mời..." onkeyup="if(event.key==='Enter') InvitationApp.generateGuestLink()">
+          <button class="btn-gen-link" onclick="InvitationApp.generateGuestLink()">🔗 Copy Link</button>
+        </div>
+      </div>
     </section>
 
   </div>
@@ -2607,8 +2718,72 @@
         document.querySelectorAll('.reveal').forEach(el => io.observe(el));
       }
 
+      // --- Personalized Guest Name ---
+      function initGuestPersonalization() {
+        const params = new URLSearchParams(window.location.search);
+        let rawGuest = params.get('to') || params.get('name') || params.get('khach') || '';
+        const role = params.get('role') || '';
+        const isAdmin = params.get('admin') === 'true';
+
+        const genBox = document.querySelector('.guest-gen-container');
+
+        if (rawGuest) {
+          let guestName = decodeURIComponent(rawGuest).trim();
+          if (role) guestName = `${decodeURIComponent(role).trim()} ${guestName}`;
+
+          const elCover = document.getElementById('guestNameCover');
+          const elIntro = document.getElementById('guestNameIntro');
+          if (elCover) elCover.textContent = guestName;
+          if (elIntro) elIntro.textContent = guestName;
+
+          // Ẩn công cụ tạo link khi khách mở link riêng dành cho họ
+          if (genBox && !isAdmin) {
+            genBox.style.display = 'none';
+          }
+        } else {
+          // Trang gốc (Cô dâu / Chú rể mở) -> Hiện công cụ tạo link
+          const elCover = document.getElementById('guestNameCover');
+          const elIntro = document.getElementById('guestNameIntro');
+          if (elCover) elCover.textContent = 'Quý khách & Gia đình';
+          if (elIntro) elIntro.textContent = 'Quý khách & Gia đình';
+
+          if (genBox) {
+            genBox.style.display = 'block';
+          }
+        }
+      }
+
+      function generateGuestLink() {
+        const input = document.getElementById('guestInputName');
+        if (!input) return;
+        const name = input.value.trim();
+        if (!name) {
+          showToast("⚠️ Vui lòng nhập tên khách mời!");
+          return;
+        }
+
+        const baseUrl = window.location.origin + window.location.pathname;
+        const link = `${baseUrl}?to=${encodeURIComponent(name)}`;
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(link).then(() => {
+            showToast(`✅ Đã copy link gửi cho: ${name}`);
+          }).catch(() => {
+            promptCopyLink(name, link);
+          });
+        } else {
+          promptCopyLink(name, link);
+        }
+      }
+
+      function promptCopyLink(name, link) {
+        showToast(`✅ Tạo link thành công cho: ${name}`);
+        window.prompt(`Link riêng dành cho "${name}" (Nhấn Ctrl+C hoặc giữ để sao chép):`, link);
+      }
+
       // --- Public Methods ---
       function init() {
+        initGuestPersonalization();
         initParticles();
         initScrollProgress();
         initScrollReveal();
@@ -2787,7 +2962,8 @@
         copySTK,
         openQRModal,
         closeQRModal,
-        heartBurst
+        heartBurst,
+        generateGuestLink
       };
     })();
 
