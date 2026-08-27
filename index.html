@@ -2643,30 +2643,10 @@
         }, { passive: true });
       }
 
-      let audioCtx = null;
-      function unlockWebAudio(audioElement) {
-        try {
-          if (!audioCtx) {
-            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            if (AudioContextClass) {
-              audioCtx = new AudioContextClass();
-              const source = audioCtx.createMediaElementSource(audioElement);
-              source.connect(audioCtx.destination);
-            }
-          }
-          if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-          }
-        } catch (e) {
-          console.log("WebAudio setup:", e);
-        }
-      }
-
       function playMusic() {
         const bgMusic = document.getElementById('bgMusic');
         const musicDiscBtn = document.getElementById('musicDiscBtn');
         if (!bgMusic) return;
-        unlockWebAudio(bgMusic);
 
         bgMusic.play().then(() => {
           isMusicPlaying = true;
