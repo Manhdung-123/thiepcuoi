@@ -1753,6 +1753,7 @@
       box-shadow: 0 3px 10px rgba(112, 38, 43, 0.12);
       transition: transform 0.2s;
     }
+
     .qr-img:active {
       transform: scale(1.05);
     }
@@ -1878,14 +1879,13 @@
   <div class="scroll-progress-bar" id="progressBar"></div>
 
   <!-- MUSIC PLAYER DISC (TOP RIGHT - DRAGGABLE) -->
-  <div class="music-disc-btn" id="musicDiscBtn"
-    title="Bật/Tắt nhạc (Kéo thả icon tự do)">
+  <div class="music-disc-btn" id="musicDiscBtn" title="Bật/Tắt nhạc (Kéo thả icon tự do)">
     <div class="music-disc-inner">🎵</div>
     <audio id="bgMusic" loop preload="auto">
-      <source src="Váy Cưới.mp3" type="audio/mpeg">
-      <source src="V%C3%A1y%20C%C6%B0%E1%BB%9Bi.mp3" type="audio/mpeg">
-      <source src="assets/Váy Cưới.mp3" type="audio/mpeg">
-      <source src="assets/V%C3%A1y%20C%C6%B0%E1%BB%9Bi.mp3" type="audio/mpeg">
+      <source src="vaycuoi.mp3" type="audio/mpeg">
+      <source
+        src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=wedding-background-music-112776.mp3"
+        type="audio/mpeg">
     </audio>
   </div>
 
@@ -2050,7 +2050,8 @@
                 <span class="tl-event-name"> BỮA TIỆC THÂN MẬT</span>
               </div>
               <div class="tl-time">🕒 17:30 — Tối Thứ Bảy, 19/09/2026</div>
-              <div class="tl-desc">Mời bạn đến dự tiệc thân mật cùng chúng tôi. Sự hiện diện của bạn là niềm vui của chúng tôi
+              <div class="tl-desc">Mời bạn đến dự tiệc thân mật cùng chúng tôi. Sự hiện diện của bạn là niềm vui của
+                chúng tôi
               </div>
             </div>
           </div>
@@ -2262,7 +2263,7 @@
         </div>
       </div>
 
-      
+
     </section>
 
     <!-- ============ SECTION 8: INVITATION PHOTO STACK ============ -->
@@ -2364,7 +2365,8 @@
             <div class="role">Chú rể</div>
             <div class="who">Nguyễn Vũ Dũng</div>
             <div class="acc">Vietcombank : 9886781944 </div>
-            <button class="btn-copy" onclick="InvitationApp.copySTK('9886781944', 'Vietcombank - Nguyễn Vũ Dũng', event)">📋
+            <button class="btn-copy"
+              onclick="InvitationApp.copySTK('9886781944', 'Vietcombank - Nguyễn Vũ Dũng', event)">📋
               Sao chép STK</button>
           </div>
         </div>
@@ -2626,10 +2628,10 @@
           envTap.addEventListener('click', (e) => {
             envelope.classList.add('tapped');
             triggerConfettiBurst(e.clientX, e.clientY);
+            playMusic();
             setTimeout(() => {
               cover.classList.add('opened');
               document.body.classList.remove('locked');
-              playMusic();
             }, 650);
           });
         }
@@ -2641,10 +2643,30 @@
         }, { passive: true });
       }
 
+      let audioCtx = null;
+      function unlockWebAudio(audioElement) {
+        try {
+          if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+              audioCtx = new AudioContextClass();
+              const source = audioCtx.createMediaElementSource(audioElement);
+              source.connect(audioCtx.destination);
+            }
+          }
+          if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+        } catch (e) {
+          console.log("WebAudio setup:", e);
+        }
+      }
+
       function playMusic() {
         const bgMusic = document.getElementById('bgMusic');
         const musicDiscBtn = document.getElementById('musicDiscBtn');
         if (!bgMusic) return;
+        unlockWebAudio(bgMusic);
 
         bgMusic.play().then(() => {
           isMusicPlaying = true;
